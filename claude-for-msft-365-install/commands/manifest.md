@@ -161,6 +161,12 @@ Default: when all fields for a provider are set, users skip the connection form
 and land straight in chat. Ask: should they instead see the form first
 (prefilled, one click)? Yes → `auto_connect=0`.
 
+## Allow Claude.ai sign-in
+
+When any enterprise config key is present, users land on the enterprise
+connection screen and the **Back** button to Claude.ai sign-in is hidden
+(`allow_1p=0`, the default). Set `allow_1p=1` to keep the **Back** button.
+
 ## Version
 
 M365 Admin Center caches by `<Id>` + `<Version>` — re-upload with the same
