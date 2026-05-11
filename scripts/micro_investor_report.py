@@ -4,15 +4,10 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from pathlib import Path
 from google import genai
-from google.genai import types
 
 def generate_report():
-    # Setup the new Gemini SDK
-    client = genai.Client(
-        api_key=os.environ["GEMINI_API_KEY"]
-    )
+    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
     
-    # Read agent and skill definitions
     root = Path(__file__).parent.parent
     agent_path = root / "plugins/agent-plugins/micro-investor-agent/agents/micro-investor-agent.md"
     skill_path = root / "plugins/agent-plugins/micro-investor-agent/skills/monthly-report/SKILL.md"
@@ -32,30 +27,61 @@ Using the workflow in this skill:
 {skill_def}
 
 Please generate the "Top 3" investment report for the current month. 
-Perform necessary research (simulate current market conditions based on your knowledge) 
-and output ONLY the email content.
+IMPORTANT: Your output will be placed directly into an HTML email. 
+Use HTML tags for formatting (e.g., <h2>, <b>, <p>, <ul>, <li>). 
+Avoid Markdown like ** or #. 
+Make it look like a premium Private Banking memo.
 """
 
-    # Using the current standard model from your debug list
     response = client.models.generate_content(
         model="gemini-2.5-flash",
         contents=prompt
     )
     return response.text
 
-def send_email(content):
+def send_email(html_content):
     smtp_server = os.environ["SMTP_SERVER"]
     smtp_port = int(os.environ["SMTP_PORT"])
     smtp_user = os.environ["SMTP_USER"]
     smtp_password = os.environ["SMTP_PASSWORD"]
     recipient = os.environ["RECIPIENT_EMAIL"]
     
-    msg = MIMEMultipart()
-    msg['From'] = smtp_user
+    msg = MIMEMultipart('alternative')
+    msg['From'] = f"Micro-Investor Wealth Management <{smtp_user}>"
     msg['To'] = recipient
-    msg['Subject'] = "Your Monthly $50 Investment Roadmap"
+    msg['Subject'] = "Private Wealth Memo: Your $50 Strategic Roadmap"
     
-    msg.attach(MIMEText(content, 'plain'))
+    # CSS for a premium look
+    styled_html = f"""
+    <html>
+    <head>
+        <style>
+            body {{ font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333; line-height: 1.6; margin: 0; padding: 0; }}
+            .container {{ width: 90%; max-width: 600px; margin: 20px auto; border: 1px solid #e1e1e1; padding: 30px; background-color: #ffffff; }}
+            .header {{ border-bottom: 2px solid #1a1a1a; padding-bottom: 10px; margin-bottom: 25px; }}
+            .header h1 {{ font-size: 22px; text-transform: uppercase; letter-spacing: 2px; margin: 0; color: #1a1a1a; }}
+            h2 {{ color: #1a1a1a; font-size: 18px; margin-top: 25px; border-left: 4px solid #1a1a1a; padding-left: 10px; }}
+            .disclaimer {{ font-size: 11px; color: #888; margin-top: 40px; border-top: 1px solid #eee; padding-top: 10px; }}
+            .ticker {{ background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-weight: bold; }}
+            .footer {{ font-size: 12px; color: #666; margin-top: 20px; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Investment Roadmap</h1>
+                <p style="margin: 5px 0; color: #666;">Monthly Strategic Allocation</p>
+            </div>
+            {html_content}
+            <div class="disclaimer">
+                <b>Disclaimer:</b> This memorandum is for informational purposes only. Nothing herein constitutes investment, legal, or tax advice. Every investment involves risk of loss.
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    msg.attach(MIMEText(styled_html, 'html'))
     
     with smtplib.SMTP(smtp_server, smtp_port) as server:
         server.starttls()
@@ -63,12 +89,8 @@ def send_email(content):
         server.send_message(msg)
 
 if __name__ == "__main__":
-    print("Generating report using Gemini 2.5 Flash...")
-    try:
-        report = generate_report()
-        print("Report generated. Sending email...")
-        send_email(report)
-        print("Done!")
-    except Exception as e:
-        print(f"Error occurred: {e}")
-        raise e
+    print("Generating premium report...")
+    report = generate_report()
+    print("Sending HTML email...")
+    send_email(report)
+    print("Done!")
