@@ -4,10 +4,14 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from pathlib import Path
 from google import genai
+from google.genai import types
 
 def generate_report():
-    # Setup the new Gemini SDK
-    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    # Setup the new Gemini SDK with explicit v1 API version
+    client = genai.Client(
+        api_key=os.environ["GEMINI_API_KEY"],
+        http_options={'api_version': 'v1'}
+    )
     
     # Read agent and skill definitions
     root = Path(__file__).parent.parent
@@ -33,7 +37,7 @@ Perform necessary research (simulate current market conditions based on your kno
 and output ONLY the email content.
 """
 
-    # Using the new SDK method
+    # Using the most stable model identifier
     response = client.models.generate_content(
         model="gemini-1.5-flash",
         contents=prompt
@@ -60,8 +64,20 @@ def send_email(content):
         server.send_message(msg)
 
 if __name__ == "__main__":
-    print("Generating report using the new Gemini SDK...")
-    report = generate_report()
-    print("Report generated. Sending email...")
-    send_email(report)
-    print("Done!")
+    print("Generating report using Gemini v1 API...")
+    try:
+        report = generate_report()
+        print("Report generated. Sending email...")
+        send_email(report)
+        print("Done!")
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        # Let's try to debug by listing models if it fails again
+        print("Attempting to list available models for debug...")
+        try:
+            client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+            for m in client.models.list():
+                print(f"Available model: {m.name}")
+        except:
+            pass
+        raise e
