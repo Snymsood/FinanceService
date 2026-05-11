@@ -3,12 +3,11 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from pathlib import Path
-import google.generativeai as genai
+from google import genai
 
 def generate_report():
-    # Setup Gemini
-    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # Setup the new Gemini SDK
+    client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
     
     # Read agent and skill definitions
     root = Path(__file__).parent.parent
@@ -34,7 +33,11 @@ Perform necessary research (simulate current market conditions based on your kno
 and output ONLY the email content.
 """
 
-    response = model.generate_content(prompt)
+    # Using the new SDK method
+    response = client.models.generate_content(
+        model="gemini-1.5-flash",
+        contents=prompt
+    )
     return response.text
 
 def send_email(content):
@@ -57,7 +60,7 @@ def send_email(content):
         server.send_message(msg)
 
 if __name__ == "__main__":
-    print("Generating report using Gemini...")
+    print("Generating report using the new Gemini SDK...")
     report = generate_report()
     print("Report generated. Sending email...")
     send_email(report)
