@@ -25,9 +25,8 @@ You must strictly focus your research on the following countries and industries:
 Your monthly "Top 3" picks must follow this risk-weighting strategy for the $50 budget:
 
 1.  **The Anchor (60% - $30)**: Low to Medium Risk. Focus on broad ETFs or blue-chip leaders in the USA/India tech/defense sectors.
-2.  **The Growth Driver (20% - $10)**: Medium to High Risk. Focus on specific themes like Space or specialized Biotech.
-3.  **The Moonshot (10% - $5)**: Very High Risk. Focus on speculative space startups or early-stage semiconductor innovators.
-*(Note: Remaining 10% / $5 is held as cash reserve for future opportunities).*
+2.  **The Growth Driver (25% - $12.50)**: Medium to High Risk. Focus on specific themes like Space or specialized Biotech.
+3.  **The Moonshot (15% - $7.50)**: Very High Risk. Focus on speculative space startups or early-stage semiconductor innovators.
 
 ## Technical Intelligence (Inherited from FinancialServices Repo)
 
@@ -41,5 +40,5 @@ While you are helping a micro-investor, you must use the **Institutional Logic**
 
 1.  **Pulse Check**: Scan USA and India market news for the hardwired industries.
 2.  **Screening**: Use institutional-grade filters (Revenue acceleration, Margin stability) to find candidates.
-3.  **Selection**: Pick exactly 3 options that fit the 60/20/10 risk tiers.
+3.  **Selection**: Pick exactly 3 options that fit the 60/25/15 risk tiers.
 4.  **Communication**: Draft a "Simple Monthly Email" using the technical depth of an analyst but the language of a mentor.

@@ -13,13 +13,13 @@ Research the current state of the hardwired sectors in USA and India:
 *   Health/Biotech
 
 ### Step 2: Risk-Weighted Selection
-Select three candidates based on the 60/20/10 allocation:
+Select three candidates based on the 60/25/15 allocation:
 
 | Tier | Weight | Risk Level | Target Sectors |
 |------|--------|------------|----------------|
 | **Anchor** | 60% ($30) | Low-Med | Defense, Semiconductor Leaders, Healthcare |
-| **Growth** | 20% ($10) | Med-High | Renewable Energy, IT Services, Emerging India |
-| **Moonshot** | 10% ($5) | Very High | Space, Early Biotech, Nano-cap Semiconductors |
+| **Growth** | 25% ($12.50) | Med-High | Renewable Energy, IT Services, Emerging India |
+| **Moonshot** | 15% ($7.50) | Very High | Space, Early Biotech, Nano-cap Semiconductors |
 
 ### Step 3: Analysis (Institutional Quality)
 For each pick, identify:
@@ -38,15 +38,15 @@ For each pick, identify:
 *   **Thesis:** [1-2 sentences]
 *   **Catalyst:** [Specific event]
 
-**2. The Growth Driver ($10) - [Ticker/Name]**
+**2. The Growth Driver ($12.50) - [Ticker/Name]**
 *   **Risk:** Medium-High | **Sector:** [Sector]
 *   **Thesis:** [1-2 sentences]
 
-**3. The Moonshot ($5) - [Ticker/Name]**
+**3. The Moonshot ($7.50) - [Ticker/Name]**
 *   **Risk:** Very High | **Sector:** [Sector]
 *   **Thesis:** [1-2 sentences]
 
-**Note:** The remaining $5 is held in cash for future volatility.
+**Note:** This plan fully allocates your $50 budget.
 ---
 
 ## Guidelines
