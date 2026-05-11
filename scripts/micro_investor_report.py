@@ -9,8 +9,8 @@ def generate_report():
     client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
     
     root = Path(__file__).parent.parent
-    agent_path = root / "plugins/agent-plugins/micro-investor-agent/agents/micro-investor-agent.md"
-    skill_path = root / "plugins/agent-plugins/micro-investor-agent/skills/monthly-report/SKILL.md"
+    agent_path = root / "plugins/agent-plugins/j-morgan-wealth/agents/j-morgan-wealth.md"
+    skill_path = root / "plugins/agent-plugins/j-morgan-wealth/skills/monthly-report/SKILL.md"
     
     with open(agent_path, "r") as f:
         agent_def = f.read()
@@ -18,7 +18,7 @@ def generate_report():
         skill_def = f.read()
         
     prompt = f"""
-You are the Micro-Investor Agent defined below:
+You are the J-Morgan Wealth Management Agent defined below:
 
 {agent_def}
 
@@ -30,7 +30,7 @@ Please generate the "Top 3" investment report for the current month.
 IMPORTANT: Your output will be placed directly into an HTML email. 
 Use HTML tags for formatting (e.g., <h2>, <b>, <p>, <ul>, <li>). 
 Avoid Markdown like ** or #. 
-Make it look like a premium Private Banking memo.
+Make it look like a premium Private Banking memo from J-Morgan Wealth.
 """
 
     response = client.models.generate_content(
@@ -47,11 +47,10 @@ def send_email(html_content):
     recipient = os.environ["RECIPIENT_EMAIL"]
     
     msg = MIMEMultipart('alternative')
-    msg['From'] = f"Micro-Investor Wealth Management <{smtp_user}>"
+    msg['From'] = f"J-Morgan Wealth Management <{smtp_user}>"
     msg['To'] = recipient
-    msg['Subject'] = "Private Wealth Memo: Your $50 Strategic Roadmap"
+    msg['Subject'] = "Private Wealth Memo: Your Strategic Roadmap"
     
-    # CSS for a premium look
     styled_html = f"""
     <html>
     <head>
@@ -62,19 +61,18 @@ def send_email(html_content):
             .header h1 {{ font-size: 22px; text-transform: uppercase; letter-spacing: 2px; margin: 0; color: #1a1a1a; }}
             h2 {{ color: #1a1a1a; font-size: 18px; margin-top: 25px; border-left: 4px solid #1a1a1a; padding-left: 10px; }}
             .disclaimer {{ font-size: 11px; color: #888; margin-top: 40px; border-top: 1px solid #eee; padding-top: 10px; }}
-            .ticker {{ background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-weight: bold; }}
             .footer {{ font-size: 12px; color: #666; margin-top: 20px; }}
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                <h1>Investment Roadmap</h1>
-                <p style="margin: 5px 0; color: #666;">Monthly Strategic Allocation</p>
+                <h1>J-Morgan Wealth Management</h1>
+                <p style="margin: 5px 0; color: #666;">Private Strategic Roadmap</p>
             </div>
             {html_content}
             <div class="disclaimer">
-                <b>Disclaimer:</b> This memorandum is for informational purposes only. Nothing herein constitutes investment, legal, or tax advice. Every investment involves risk of loss.
+                <b>Disclaimer:</b> This memorandum is for informational purposes only. J-Morgan Wealth Management does not provide investment, legal, or tax advice via automated systems.
             </div>
         </div>
     </body>
@@ -89,7 +87,7 @@ def send_email(html_content):
         server.send_message(msg)
 
 if __name__ == "__main__":
-    print("Generating premium report...")
+    print("Generating premium report from J-Morgan Wealth...")
     report = generate_report()
     print("Sending HTML email...")
     send_email(report)

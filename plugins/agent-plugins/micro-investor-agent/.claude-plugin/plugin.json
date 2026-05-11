@@ -1,8 +1,0 @@
-{
-  "name": "micro-investor-agent",
-  "version": "0.1.0",
-  "description": "Monthly investment recommendations for micro-investors ($50/month)",
-  "author": {
-    "name": "Micro-Investor Project"
-  }
-}
