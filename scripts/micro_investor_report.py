@@ -3,10 +3,12 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from pathlib import Path
-import anthropic
+import google.generativeai as genai
 
 def generate_report():
-    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    # Setup Gemini
+    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+    model = genai.GenerativeModel('gemini-1.5-flash')
     
     # Read agent and skill definitions
     root = Path(__file__).parent.parent
@@ -27,20 +29,13 @@ Using the workflow in this skill:
 
 {skill_def}
 
-Please generate the "Top 3" investment report for May 2026. 
-Perform necessary research (simulate current market conditions based on your knowledge if tools are not available) 
+Please generate the "Top 3" investment report for the current month. 
+Perform necessary research (simulate current market conditions based on your knowledge) 
 and output ONLY the email content.
 """
 
-    message = client.messages.create(
-        model="claude-3-5-sonnet-20240620",
-        max_tokens=2000,
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
-    )
-    
-    return message.content[0].text
+    response = model.generate_content(prompt)
+    return response.text
 
 def send_email(content):
     smtp_server = os.environ["SMTP_SERVER"]
@@ -62,7 +57,7 @@ def send_email(content):
         server.send_message(msg)
 
 if __name__ == "__main__":
-    print("Generating report...")
+    print("Generating report using Gemini...")
     report = generate_report()
     print("Report generated. Sending email...")
     send_email(report)
