@@ -16,6 +16,7 @@ from pathlib import Path
 
 import yfinance as yf
 from google import genai
+from google.genai import errors as genai_errors
 
 
 # ---------------------------------------------------------------------------
@@ -127,23 +128,25 @@ Make it look like a premium Private Banking memo from J-Morgan Wealth.
 Include the current price and a brief note on recent catalysts from the live data above.
 """
 
-    # Try Pro first; fall back to Flash if quota is exhausted (429)
-    for model_name in ["gemini-2.5-pro", "gemini-2.5-flash"]:
-        try:
-            print(f"  Calling {model_name}...")
-            response = client.models.generate_content(
-                model=model_name,
-                contents=prompt,
-            )
-            print(f"  ✓ Success with {model_name}")
-            return response.text
-        except Exception as e:
-            if "429" in str(e) or "RESOURCE_EXHAUSTED" in str(e):
-                print(f"  ⚠ {model_name} quota exhausted, falling back...")
-                continue
-            raise  # Re-raise non-quota errors
+    # Try Pro first; fall back to Flash if Pro fails for any reason (quota, etc.)
+    try:
+        print("  Calling gemini-2.5-pro...")
+        response = client.models.generate_content(
+            model="gemini-2.5-pro",
+            contents=prompt,
+        )
+        print("  ✓ Success with gemini-2.5-pro")
+        return response.text
+    except Exception as e:
+        print(f"  ⚠ gemini-2.5-pro failed: {type(e).__name__}: {e}")
+        print("  ↓ Falling back to gemini-2.5-flash...")
 
-    raise RuntimeError("Both gemini-2.5-pro and gemini-2.5-flash failed.")
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+    )
+    print("  ✓ Success with gemini-2.5-flash")
+    return response.text
 
 
 # ---------------------------------------------------------------------------
